@@ -4,8 +4,10 @@ import axios from "axios";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/router";
 
+import { FcGoogle } from "react-icons/fc";
+import { FaGithub } from "react-icons/fa";
+
 const Auth = () => {
-    
     const router = useRouter();
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
@@ -18,20 +20,20 @@ const Auth = () => {
         );
     }, []);
 
-     const login = useCallback(async () => {
-         try {
-             await signIn("credentials", {
-                 email,
-                 password,
-                 redirect: false,
-                 callbackUrl: "/",
-             });
+    const login = useCallback(async () => {
+        try {
+            await signIn("credentials", {
+                email,
+                password,
+                redirect: false,
+                callbackUrl: "/",
+            });
 
-             router.push("/");
-         } catch (error) {
-             console.log("Error ao logar", error);
-         }
-     }, [email, password, router]);
+            router.push("/");
+        } catch (error) {
+            console.log("Error ao logar", error);
+        }
+    }, [email, password, router]);
 
     const register = useCallback(async () => {
         try {
@@ -46,8 +48,6 @@ const Auth = () => {
             console.log("Error register", error);
         }
     }, [email, login, name, password]);
-
-   
 
     return (
         <div className="relative h-full w-full bg-[url('../../public/images/hero.jpg')] bg-no-repeat bg-center bg-fixed bg-cover">
@@ -94,6 +94,44 @@ const Auth = () => {
                         >
                             {variant === "login" ? "Login" : "Sign Up"}
                         </button>
+                        <div className="flex flex-row items-center gap-4 mt-8 justify-center">
+                            <div
+                                onClick={() =>
+                                    signIn("google", { callbackUrl: "/" })
+                                }
+                                className="
+                            w-10 
+                            h-10 
+                            bg-white
+                            rounded-full 
+                            flex 
+                            items-center 
+                            justify-center 
+                            cursor-pointer 
+                            hover:opacity-80 
+                            transition"
+                            >
+                                <FcGoogle size={30} />
+                            </div>
+                            <div
+                                onClick={() =>
+                                    signIn("github", { callbackUrl: "/" })
+                                }
+                                className="
+                            w-10 
+                            h-10 
+                            bg-white 
+                            rounded-full 
+                            flex 
+                            items-center 
+                            justify-center 
+                            cursor-pointer 
+                            hover:opacity-80 
+                            transition"
+                            >
+                                <FaGithub size={30} />
+                            </div>
+                        </div>
                         <p className="text-neutral-500 mt-12">
                             {variant == "login"
                                 ? "First time using Netflix?"

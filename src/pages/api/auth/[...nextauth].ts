@@ -1,11 +1,25 @@
 import NextAuth from "next-auth/next";
 import Credentials from "next-auth/providers/credentials";
 
-import prismadb from "../../../../lib/prismadb";
+import GithubProvider from 'next-auth/providers/github'
+import GoogleProvider from 'next-auth/providers/google'
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+
 import { compare } from "bcrypt";
+import { PrismaClient } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 export default NextAuth({
     providers: [
+        GithubProvider({
+            clientId: process.env.GITHUB_ID || "",
+            clientSecret: process.env.GITHUB_SECRET || "",
+        }),
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID || "",
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+        }),
         Credentials({
             id: "credentials",
             name: "Credentials",
@@ -14,14 +28,18 @@ export default NextAuth({
                 password: { label: "Password", type: "password" },
             },
             async authorize(credentials) {
-           
-                const user = await prismadb.netflixUser.findUnique({
+
+                if(!credentials?.email || !credentials.password){
+                    throw new Error('Email and password unique')
+                }
+
+                const user = await prisma.user.findUnique({
                     where: {
-                        email: credentials?.email,
+                        email: credentials.email,
                     },
                 });
 
-                console.log("user", user);
+                console.log("USER", user);
 
                 if (!user || !user.hashPassword) {
                     throw new Error("Email doest not exist");
@@ -44,6 +62,7 @@ export default NextAuth({
         signIn: "/auth",
     },
     debug: process.env.NODE_ENV === "development",
+    adapter: PrismaAdapter(prisma),
     session: {
         strategy: "jwt",
     },
