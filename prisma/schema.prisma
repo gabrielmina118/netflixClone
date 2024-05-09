@@ -26,7 +26,7 @@ model User{
   sessions Session[]
   accounts Account[]
 
-   @@map("User")
+   @@map("user")
 }
 
 model Account{
@@ -47,7 +47,7 @@ model Account{
   user User @relation(fields: [userId],references: [id], onDelete:Cascade)
 
   @@unique([provider,providerAccountId])
-  @@map("Account")
+  @@map("account")
 }
 
 model Session{

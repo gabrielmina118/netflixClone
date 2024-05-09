@@ -1,7 +1,8 @@
 import bcrypt from "bcrypt";
 import { NextApiRequest, NextApiResponse } from "next";
+import { PrismaClient } from "@prisma/client";
 
-import prismadb from "../../../lib/prismadb";
+const prisma = new PrismaClient();
 
 export default async function handler(
     req: NextApiRequest,
@@ -14,7 +15,7 @@ export default async function handler(
     try {
         const { email, name, password } = req.body;
 
-        const emailAlreadyExist = await prismadb.netflixUser.findUnique({
+        const emailAlreadyExist = await prisma.user.findUnique({
             where: {
                 email,
             },
@@ -26,7 +27,7 @@ export default async function handler(
 
         const hashPassword = await bcrypt.hash(password, 12);
 
-        const user = await prismadb.netflixUser.create({
+        const user = await prisma.user.create({
             data: {
                 email,
                 name,
