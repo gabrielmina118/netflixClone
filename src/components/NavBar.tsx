@@ -34,8 +34,6 @@ const NavBarComponent = () => {
             }
         };
 
-        console.log(window.screenY, TOP_OFFSET);
-
         window.addEventListener("scroll", handleScroll);
 
         // Remover o evento de scroll

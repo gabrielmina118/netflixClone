@@ -17,6 +17,8 @@ export default async function handler(
          
          const movieCount = await prisma.movie.count();
 
+         console.log('count',movieCount)
+
          // Server para alterar o id que esta salvo no banco de dados
          const randomIndex = Math.floor(Math.random()* movieCount);
 
@@ -25,7 +27,7 @@ export default async function handler(
             skip:randomIndex
          })
 
-         return res.status(200).json([randomMovies]);
+         return res.status(200).json(randomMovies[0]);
 
       } catch (error) {
           console.log("Error endpoint random", error);

@@ -8,11 +8,11 @@ const useBillboard = () => {
         revalidateOnReconnect: false,
     });
 
-    return{
+    return {
         data,
         error,
-        isLoading
-    }
+        isLoading,
+    };
 };
 
-export default useBillboard
+export default useBillboard;
